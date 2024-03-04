@@ -1,8 +1,9 @@
+const mongoose = require("mongoose");
+
 const postSchema = new mongoose.Schema({
-  postId: { type: mongoose.Schema.Types.ObjectId, ref: "Post" },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  content: String,
-  mediaUrls: [String],
+  caption: String,
+  imageUrls: [String], // URLs of images stored in S3
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
