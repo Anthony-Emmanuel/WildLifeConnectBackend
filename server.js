@@ -15,7 +15,7 @@ app.use(express.json());
 // Public routes
 app.use("/animals", animalRoutes);
 app.use("/users", userRoutes);
-app.use("/posts", authenticateToken, postRoutes); //authentication middleware added to secure the post route
+app.use("/api/posts", postRoutes); //authentication middleware added to secure the post route
 
 const port = process.env.PORT || 3000;
 

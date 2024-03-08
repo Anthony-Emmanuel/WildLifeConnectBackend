@@ -1,6 +1,6 @@
 const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
 const multer = require("multer");
-const Post = require("../models/postSchema");
+const User = require("../models/userSchema");
 
 // Initialize the S3 client with AWS v3
 const s3Client = new S3Client({
@@ -56,10 +56,9 @@ exports.uploadImageToS3 = (req, res, next) => {
     }
   });
 };
-
 exports.createPost = async (req, res) => {
   try {
-    const { userId, caption } = req.body;
+    const { caption } = req.body;
 
     if (!req.file) {
       return res.status(422).json({ message: "Image not uploaded correctly" });
@@ -67,13 +66,24 @@ exports.createPost = async (req, res) => {
 
     const imageUrl = req.file.location; // URL from S3
 
-    const newPost = new Post({
-      caption,
-      imageUrls: [imageUrl],
-    });
+    // Assuming req.user.userId contains the ID of the logged-in user
+    const userId = req.user.userId;
+    const user = await User.findById(userId);
 
-    await newPost.save();
-    res.status(201).json(newPost);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Push the new post into the user's posts array
+    user.posts.push({ imageUrl, caption });
+    await user.save();
+
+    res
+      .status(201)
+      .json({
+        message: "Post created successfully",
+        post: { imageUrl, caption },
+      });
   } catch (error) {
     console.error("Error creating post:", error);
     res.status(500).json({ message: error.message });
