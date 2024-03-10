@@ -58,7 +58,7 @@ exports.uploadImageToS3 = (req, res, next) => {
 };
 exports.createPost = async (req, res) => {
   try {
-    const { caption } = req.body;
+    const { caption, location } = req.body;
 
     if (!req.file) {
       return res.status(422).json({ message: "Image not uploaded correctly" });
@@ -75,15 +75,13 @@ exports.createPost = async (req, res) => {
     }
 
     // Push the new post into the user's posts array
-    user.posts.push({ imageUrl, caption });
+    user.posts.push({ imageUrl, caption, location });
     await user.save();
 
-    res
-      .status(201)
-      .json({
-        message: "Post created successfully",
-        post: { imageUrl, caption },
-      });
+    res.status(201).json({
+      message: "Post created successfully",
+      post: { imageUrl, caption },
+    });
   } catch (error) {
     console.error("Error creating post:", error);
     res.status(500).json({ message: error.message });
