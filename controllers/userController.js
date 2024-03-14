@@ -49,3 +49,17 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.searchUser = async (req, res) => {
+  const { username } = req.params;
+  try {
+    const query = req.query.query;
+    const regex = new RegExp(query, 'i');
+    
+    const searchResults = await User.find({ $or: [{ username: regex }, { email: regex }] });
+    res.json(searchResults);
+  } catch (error) {
+    console.error('Error searching users:', error);
+    res.status(500).json({ error: 'An error occurred while searching users' });
+  }
+};
