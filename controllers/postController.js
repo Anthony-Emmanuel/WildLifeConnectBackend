@@ -56,6 +56,7 @@ exports.uploadImageToS3 = (req, res, next) => {
     }
   });
 };
+
 exports.createPost = async (req, res) => {
   try {
     const { caption, location } = req.body;
@@ -87,3 +88,32 @@ exports.createPost = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+exports.getPosts = async (req, res) => {
+  try {
+      const user = await User.find();
+      let arr = [];
+      console.log(user.length)
+
+      for(i=0;i<user.length;i++){
+        let name = user[i].username;
+
+        for(x=0;x<user[i].posts.length;x++){
+          let imageUrl = user[i].posts[x].imageUrl;
+          let caption = user[i].posts[x].caption;
+        
+          arr.push({name:name,imageUrl:imageUrl,caption:caption})
+        }
+      }
+
+      console.log(arr)
+
+      res.status(200).send(arr);
+
+  } catch (error) {
+    console.error("Error fetching posts", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+

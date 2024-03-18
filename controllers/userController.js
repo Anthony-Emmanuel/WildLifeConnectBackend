@@ -2,7 +2,6 @@ const bcrypt = require("bcryptjs"); // Changed to bcryptjs
 const User = require("../models/userSchema");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-
 exports.registerUser = async (req, res) => {
   const { email, password, firstName, lastName, username } = req.body;
   try {
@@ -35,6 +34,7 @@ exports.loginUser = async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
+    // Now using bcryptjs's compare function
 
     if (user && (await bcrypt.compare(password, user.password))) {
       const token = jwt.sign(
@@ -42,6 +42,7 @@ exports.loginUser = async (req, res) => {
         process.env.JWT_SECRET,
         { expiresIn: "24h" }
       );
+      res.json({ token });
 
       res.json({ 
         token, 
@@ -57,7 +58,6 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 exports.searchUser = async (req, res) => {
   const { username } = req.params;
   try {
