@@ -20,6 +20,26 @@ const postSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+const tokenSchema = new mongoose.Schema(
+  {
+    imageUrl: {
+      type: String,
+      required: true,
+    },
+    animalName: {
+      type: String,
+      required: true,
+    },
+    rarity: {
+      type: String,
+      required: true,
+    },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
+  },
+  { timestamps: true }
+);
+
 const userSchema = new mongoose.Schema(
   {
     username: {
@@ -45,6 +65,7 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
     posts: [postSchema],
+    tokens: [tokenSchema],
   },
   { timestamps: true }
 );
