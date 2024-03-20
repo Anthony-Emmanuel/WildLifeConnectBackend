@@ -91,29 +91,52 @@ exports.createPost = async (req, res) => {
 
 exports.getPosts = async (req, res) => {
   try {
-      const user = await User.find();
-      let arr = [];
-      console.log(user.length)
+    const user = await User.find();
+    let arr = [];
+    console.log(user.length);
 
-      for(i=0;i<user.length;i++){
-        let name = user[i].username;
+    for (i = 0; i < user.length; i++) {
+      let name = user[i].username;
 
-        for(x=0;x<user[i].posts.length;x++){
-          let imageUrl = user[i].posts[x].imageUrl;
-          let caption = user[i].posts[x].caption;
-        
-          arr.push({name:name,imageUrl:imageUrl,caption:caption})
-        }
+      for (x = 0; x < user[i].posts.length; x++) {
+        let imageUrl = user[i].posts[x].imageUrl;
+        let caption = user[i].posts[x].caption;
+
+        arr.push({ name: name, imageUrl: imageUrl, caption: caption });
       }
+    }
 
-      console.log(arr)
+    console.log(arr);
 
-      res.status(200).send(arr);
-
+    res.status(200).send(arr);
   } catch (error) {
     console.error("Error fetching posts", error);
     res.status(500).json({ message: error.message });
   }
 };
 
+exports.getUserPosts = async (req, res) => {
+  try {
+    const username = req.params.username || req.query.username; 
+    if (!username) {
+      return res.status(400).json({ message: "Missing username" });
+    }
 
+    const user = await User.findOne({ username }); 
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const userPosts = user.posts.map((post) => ({
+      name: user.username, 
+      imageUrl: post.imageUrl,
+      caption: post.caption,
+    }));
+    
+    res.status(200).send(userPosts);
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
