@@ -48,6 +48,7 @@ exports.loginUser = async (req, res) => {
         firstName: user.firstName,
         lastName: user.lastName,
         email: user.email,
+        username: user.username,
       });
 
     } else {
