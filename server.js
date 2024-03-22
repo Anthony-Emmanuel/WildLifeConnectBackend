@@ -18,6 +18,7 @@ app.use("/animals", animalRoutes);
 app.use("/users", userRoutes);
 app.use("/api/posts", postRoutes); //authentication middleware added to secure the post route
 app.use("/tokens", tokenRoutes);
+app.use("/predicts", predictionRoutes);
 
 const port = process.env.PORT || 3000;
 
