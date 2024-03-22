@@ -6,6 +6,7 @@ const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoutes");
 const tokenRoutes = require("./routes/tokenRoutes");
 const authenticateToken = require("./middleware/authenticateToken");
+const predictionRoutes = require("./routes/predictionRoutes");
 
 const { connectDB } = require("./config/db");
 
