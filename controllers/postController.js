@@ -97,12 +97,13 @@ exports.getPosts = async (req, res) => {
 
     for (i = 0; i < user.length; i++) {
       let name = user[i].username;
+      let location = user[i].location;
 
       for (x = 0; x < user[i].posts.length; x++) {
         let imageUrl = user[i].posts[x].imageUrl;
         let caption = user[i].posts[x].caption;
 
-        arr.push({ name: name, imageUrl: imageUrl, caption: caption });
+        arr.push({ name: name, location: location, imageUrl: imageUrl, caption: caption });
       }
     }
 
@@ -129,7 +130,8 @@ exports.getUserPosts = async (req, res) => {
     }
 
     const userPosts = user.posts.map((post) => ({
-      name: user.username, 
+      name: user.username,
+      location: user.location,
       imageUrl: post.imageUrl,
       caption: post.caption,
     }));
