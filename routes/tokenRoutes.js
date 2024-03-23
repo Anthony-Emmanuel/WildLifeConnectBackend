@@ -1,8 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const {saveToken} = require("../controllers/tokenController");
+const Tokens = require("../controllers/tokenController");
 const authenticateToken = require("../middleware/authenticateToken");
 
-router.post("/saveToken", authenticateToken, saveToken);
+router.post("/saveToken", authenticateToken, Tokens.saveToken);
+
+router.get("/get/:username", Tokens.getUserTokens);
 
 module.exports = router;

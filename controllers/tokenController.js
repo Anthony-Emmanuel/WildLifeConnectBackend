@@ -24,20 +24,20 @@ exports.saveToken = async (req, res) => {
         .status(422)
         .json({ message: "Image upload failed", error: err.message });
     }
-    if (!req.body.imageUrl) {
+    if (!req.file) {
       return res
         .status(422)
         .json({ message: "No image file found in the request" });
     }
 
     // Construct the S3 file key
-    const fileKey = `tokens/${Date.now().toString()}-${req.body.imageUrl.originalname}`;
+    const fileKey = `tokens/${Date.now().toString()}-${req.file.originalname}`;
 
     // Prepare the parameters for the S3 upload
     const uploadParams = {
       Bucket: process.env.AWS_S3_BUCKET,
       Key: fileKey,
-      Body: req.body.imageUrl.buffer,
+      Body: req.file.buffer,
       // ACL: "public-read",
     };
 
@@ -45,14 +45,14 @@ exports.saveToken = async (req, res) => {
       // Upload the file to S3
       await s3Client.send(new PutObjectCommand(uploadParams));
       // Update req.file.location to be used in createPost
-      req.body.imageUrl = `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`;
+      req.file.location = `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`;
       try {
         // Assuming the user is authenticated and you have the user ID
         const userId = req.user.userId; // Replace with actual user ID
     
         // Create a new token object
         const newToken = {
-          imageUrl: req.body.imageUrl,
+          imageUrl: req.file.location,
           animalName: req.body.animalName,
           rarity: req.body.rarity,
         };
@@ -80,3 +80,30 @@ exports.saveToken = async (req, res) => {
     }
   });
 }
+
+exports.getUserTokens = async (req, res) => {
+  try {
+    const username = req.params.username || req.query.username; 
+    if (!username) {
+      return res.status(400).json({ message: "Missing username" });
+    }
+
+    const user = await User.findOne({ username }); 
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const userTokens = user.tokens.map((token) => ({
+      name: user.username, 
+      imageUrl: token.imageUrl,
+      animalName: token.animalName,
+      rarity: token.rarity,
+    }));
+    
+    res.status(200).send(userTokens);
+  } catch (error) {
+    console.error("Error fetching tokens:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
