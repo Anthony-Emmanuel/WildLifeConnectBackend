@@ -1,13 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const { registerUser, loginUser, searchUser } = require("../controllers/userController");
+const authenticateToken = require("../middleware/authenticateToken"); // Adjust the path as necessary
 
-// Match the POST request to /users/register to the registerUser controller method
+const {
+  registerUser,
+  loginUser,
+  searchUser,
+  deleteUser,
+} = require("../controllers/userController");
+
 router.post("/register", registerUser);
 
-// Match the POST request to /users/login to the loginUser controller method
 router.post("/login", loginUser);
 
 router.get("/search/:username", searchUser);
+
+router.delete("/:userId", authenticateToken, deleteUser);
 
 module.exports = router;

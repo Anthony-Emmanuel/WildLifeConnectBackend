@@ -50,7 +50,6 @@ exports.loginUser = async (req, res) => {
         email: user.email,
         username: user.username,
       });
-
     } else {
       res.status(401).json({ message: "Invalid credentials" });
     }
@@ -64,12 +63,32 @@ exports.searchUser = async (req, res) => {
   const { username } = req.params;
   try {
     const query = req.query.query;
-    const regex = new RegExp(query, 'i');
-    
-    const searchResults = await User.find({ $or: [{ username: regex }, { email: regex }] });
+    const regex = new RegExp(query, "i");
+
+    const searchResults = await User.find({
+      $or: [{ username: regex }, { email: regex }],
+    });
     res.json(searchResults);
   } catch (error) {
-    console.error('Error searching users:', error);
-    res.status(500).json({ error: 'An error occurred while searching users' });
+    console.error("Error searching users:", error);
+    res.status(500).json({ error: "An error occurred while searching users" });
+  }
+};
+
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    //Verifying that the user deleting the account is the account owner.
+    if (req.user.userId !== userId) {
+      return res
+        .status(403)
+        .json({ message: "Unauthorized to delete this account" });
+    }
+    await User.findByIdAndDelete(userId);
+
+    res.status(200).json({ message: "Account deleted successfully" });
+  } catch (error) {
+    console.error("Account deletion error:", error);
+    res.status(500).json({ message: "Failed to delete account" });
   }
 };
