@@ -15,6 +15,6 @@ router.post("/login", loginUser);
 
 router.get("/search/:username", searchUser);
 
-router.delete("/:userId", authenticateToken, deleteUser);
+router.delete("/deleteByEmail", authenticateToken, deleteUser);
 
 module.exports = router;

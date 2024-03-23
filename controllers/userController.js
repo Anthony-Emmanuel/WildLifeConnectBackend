@@ -76,17 +76,22 @@ exports.searchUser = async (req, res) => {
 };
 
 exports.deleteUser = async (req, res) => {
+  const { email } = req.body; // or req.params if you prefer to use URL parameters
+
   try {
-    const userId = req.params.userId;
-    //Verifying that the user deleting the account is the account owner.
-    if (req.user.userId !== userId) {
+    // Check for the authenticated user's email to match the requested deletion email
+    if (req.user.email !== email) {
       return res
         .status(403)
         .json({ message: "Unauthorized to delete this account" });
     }
-    await User.findByIdAndDelete(userId);
 
-    res.status(200).json({ message: "Account deleted successfully" });
+    const result = await User.findOneAndDelete({ email: email });
+    if (result) {
+      res.status(200).json({ message: "Account deleted successfully" });
+    } else {
+      res.status(404).json({ message: "User not found" });
+    }
   } catch (error) {
     console.error("Account deletion error:", error);
     res.status(500).json({ message: "Failed to delete account" });
