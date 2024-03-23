@@ -1,4 +1,4 @@
-  require("dotenv").config();
+require("dotenv").config();
 
 const express = require("express");
 const animalRoutes = require("./routes/animalRoutes");
@@ -6,7 +6,6 @@ const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoutes");
 const tokenRoutes = require("./routes/tokenRoutes");
 const authenticateToken = require("./middleware/authenticateToken");
-const predictionRoutes = require("./routes/predictionRoutes");
 
 const { connectDB } = require("./config/db");
 
@@ -19,7 +18,6 @@ app.use("/animals", animalRoutes);
 app.use("/users", userRoutes);
 app.use("/api/posts", postRoutes); //authentication middleware added to secure the post route
 app.use("/tokens", tokenRoutes);
-app.use("/predicts", predictionRoutes);
 
 const port = process.env.PORT || 3000;
 
