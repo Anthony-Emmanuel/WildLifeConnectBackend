@@ -5,8 +5,6 @@ const animalRoutes = require("./routes/animalRoutes");
 const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoutes");
 const tokenRoutes = require("./routes/tokenRoutes");
-const authenticateToken = require("./middleware/authenticateToken");
-
 const { connectDB } = require("./config/db");
 
 const app = express();
@@ -16,13 +14,12 @@ app.use(express.json());
 // Public routes
 app.use("/animals", animalRoutes);
 app.use("/users", userRoutes);
-app.use("/api/posts", postRoutes); //authentication middleware added to secure the post route
+app.use("/api/posts", postRoutes); // Assuming authentication middleware is correctly applied in postRoutes
 app.use("/tokens", tokenRoutes);
-app.use("/delete", userRoutes);
 
 const port = process.env.PORT || 3000;
 
-// Used connectDB to establish database connection
+// Connect to MongoDB and start the server
 connectDB()
   .then(() => {
     app.listen(port, () => console.log(`Server running on port ${port}`));
