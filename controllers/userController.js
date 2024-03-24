@@ -43,7 +43,6 @@ exports.loginUser = async (req, res) => {
         { expiresIn: "24h" }
       );
 
-      // Consolidate the response here
       res.json({
         token,
         firstName: user.firstName,
@@ -77,7 +76,7 @@ exports.searchUser = async (req, res) => {
 };
 
 exports.deleteUser = async (req, res) => {
-  const { email } = req.body; // or req.params if you prefer to use URL parameters
+  const { email } = req.body;
 
   try {
     // Check for the authenticated user's email to match the requested deletion email
