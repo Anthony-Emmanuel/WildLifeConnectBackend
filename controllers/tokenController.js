@@ -38,7 +38,6 @@ exports.saveToken = async (req, res) => {
       Bucket: process.env.AWS_S3_BUCKET,
       Key: fileKey,
       Body: req.file.buffer,
-      // ACL: "public-read",
     };
 
     try {
@@ -47,8 +46,7 @@ exports.saveToken = async (req, res) => {
       // Update req.file.location to be used in createPost
       req.file.location = `https://${process.env.AWS_S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${fileKey}`;
       try {
-        // Assuming the user is authenticated and you have the user ID
-        const userId = req.user.userId; // Replace with actual user ID
+        const userId = req.user.userId; 
     
         // Create a new token object
         const newToken = {

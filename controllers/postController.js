@@ -38,7 +38,6 @@ exports.uploadImageToS3 = (req, res, next) => {
       Bucket: process.env.AWS_S3_BUCKET,
       Key: fileKey,
       Body: req.file.buffer,
-      // ACL: "public-read",
     };
 
     try {
@@ -101,7 +100,7 @@ exports.getPosts = async (req, res) => {
       for (x = 0; x < user[i].posts.length; x++) {
         let imageUrl = user[i].posts[x].imageUrl;
         let caption = user[i].posts[x].caption;
-        let location = user[i].posts[x].location; // Correct path if location is stored in each post
+        let location = user[i].posts[x].location;
         arr.push({ name, location, imageUrl, caption });
       }
     }

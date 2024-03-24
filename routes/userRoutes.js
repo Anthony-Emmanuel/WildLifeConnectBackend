@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const authenticateToken = require("../middleware/authenticateToken"); // Adjust the path as necessary
+const authenticateToken = require("../middleware/authenticateToken");
 
 const {
   registerUser,

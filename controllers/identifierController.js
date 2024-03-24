@@ -38,7 +38,6 @@ exports.saveNget = async (req, res) => {
         Bucket: process.env.AWS_S3_BUCKET,
         Key: fileKey,
         Body: req.file.buffer,
-        // ACL: "public-read",
       };
   
       try {
