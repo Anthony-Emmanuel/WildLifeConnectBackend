@@ -5,6 +5,7 @@ const animalRoutes = require("./routes/animalRoutes");
 const userRoutes = require("./routes/userRoutes");
 const postRoutes = require("./routes/postRoutes");
 const tokenRoutes = require("./routes/tokenRoutes");
+const identifierRoutes = require("./routes/identifierRoutes");
 const { connectDB } = require("./config/db");
 
 const app = express();
@@ -16,6 +17,7 @@ app.use("/animals", animalRoutes);
 app.use("/users", userRoutes);
 app.use("/api/posts", postRoutes); // Assuming authentication middleware is correctly applied in postRoutes
 app.use("/tokens", tokenRoutes);
+app.use("/identifiers", identifierRoutes);
 
 const port = process.env.PORT || 3000;
 
