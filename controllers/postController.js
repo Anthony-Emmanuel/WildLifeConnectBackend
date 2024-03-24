@@ -141,3 +141,30 @@ exports.getUserPosts = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+exports.deletePost = async (req, res) => {
+  try {
+    const username = req.body.username;
+    const imageUrl = req.body.imgUrl; 
+
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const postIndex = user.posts.findIndex(post => post.imageUrl === imageUrl);
+    if (postIndex === -1) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    user.posts.splice(postIndex, 1);
+    await user.save();
+
+    res.status(200).json({ message: "Post deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
